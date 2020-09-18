@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class MatisApplication
 
 fun main(args: Array<String>) {
-	runApplication<MatisApplication>(*args)
+    runApplication<MatisApplication>(*args)
 }
