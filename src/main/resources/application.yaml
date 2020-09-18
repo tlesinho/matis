@@ -1,0 +1,4 @@
+port: 7777
+
+odds:
+  apiKey: 75d1e4c33b3943ec4efcf0916d0f22d0
