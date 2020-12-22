@@ -3,12 +3,13 @@ package com.petserver.matis.controller
 import com.petserver.matis.properties.OddsProperties
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import org.springframework.http.HttpMethod
+import org.springframework.http.*
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 import java.net.URI
+
 
 
 @RestController
@@ -26,4 +27,21 @@ class TeamController(private val oddsProperties: OddsProperties,
 
         return (responseEntity.body?.get("rates") as Map<String, Any>)[ccy]
     }
+
+    @GetMapping("/match")
+    private fun getMatch(): Any? {
+
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        //headers["X-Auth-Token"] = "361f59a65b3443c19918534628accf76"
+        headers.set("X-Auth-Token", "361f59a65b3443c19918534628accf76")
+
+        val entity = HttpEntity<String>(headers)
+
+        val response = restTemplate.exchange(URI.create("http://api.football-data.org/v2/competitions/PL/standings"), HttpMethod.GET, entity, Map::class.java)
+        return (response.body)
+    }
 }
+
+
