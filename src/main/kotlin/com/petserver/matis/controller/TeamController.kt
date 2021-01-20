@@ -1,6 +1,7 @@
 package com.petserver.matis.controller
 
 import com.petserver.matis.properties.OddsProperties
+import com.petserver.matis.domain.Standings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.springframework.http.*
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 import java.net.URI
-
 
 
 @RestController
@@ -29,18 +29,24 @@ class TeamController(private val oddsProperties: OddsProperties,
     }
 
     @GetMapping("/match")
-    private fun getMatch(): Any? {
-
-
+    private fun getMatch(): String? {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        //headers["X-Auth-Token"] = "361f59a65b3443c19918534628accf76"
         headers.set("X-Auth-Token", "361f59a65b3443c19918534628accf76")
 
         val entity = HttpEntity<String>(headers)
 
-        val response = restTemplate.exchange(URI.create("http://api.football-data.org/v2/competitions/PL/standings"), HttpMethod.GET, entity, Map::class.java)
-        return (response.body)
+        val response = restTemplate.exchange(URI.create("http://api.football-data.org/v2/competitions/PL/standings"), HttpMethod.GET, entity, Standings::class.java)
+
+        val body = response.body
+
+        return body
+                ?.standings
+                ?.first { "TOTAL".equals(it.type, ignoreCase = true) }
+                ?.table
+                ?.map { it.team.name to it.points }
+                ?.sortedByDescending { it.second }
+                ?.joinToString(separator = "\n")
     }
 }
 
