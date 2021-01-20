@@ -4,10 +4,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class MatisApplicationTests {
+class TeamTest {
 
 	@Test
-	fun contextLoads() {
+	fun `can return hello world ^_^`() {
+
 	}
 
 }
