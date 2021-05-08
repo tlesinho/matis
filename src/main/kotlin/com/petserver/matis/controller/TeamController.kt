@@ -28,8 +28,8 @@ class TeamController(private val oddsProperties: OddsProperties,
         return (responseEntity.body?.get("rates") as Map<String, Any>)[ccy]
     }
 
-    @GetMapping("/match")
-    private fun getMatch(): String? {
+    @GetMapping("/PL")
+    private fun getPL(): String? {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
         headers.set("X-Auth-Token", "361f59a65b3443c19918534628accf76")
@@ -44,9 +44,72 @@ class TeamController(private val oddsProperties: OddsProperties,
                 ?.standings
                 ?.first { "TOTAL".equals(it.type, ignoreCase = true) }
                 ?.table
-                ?.map { it.team.name to it.points }
+                ?.map { it.team.name to it.goalsPerGame to it.points}
                 ?.sortedByDescending { it.second }
                 ?.joinToString(separator = "\n")
+    }
+
+    @GetMapping("/LaLiga")
+    private fun getLaLiga(): String? {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.set("X-Auth-Token", "361f59a65b3443c19918534628accf76")
+
+        val entity = HttpEntity<String>(headers)
+
+        val response = restTemplate.exchange(URI.create("http://api.football-data.org/v2/competitions/PD/standings"), HttpMethod.GET, entity, Standings::class.java)
+
+        val body = response.body
+
+        return body
+            ?.standings
+            ?.first { "TOTAL".equals(it.type, ignoreCase = true) }
+            ?.table
+            ?.map { it.team.name to it.goalsPerGame to it.points}
+            ?.sortedByDescending { it.second }
+            ?.joinToString(separator = "\n")
+    }
+
+    @GetMapping("/SeriaA")
+    private fun getSeriaA(): String? {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.set("X-Auth-Token", "361f59a65b3443c19918534628accf76")
+
+        val entity = HttpEntity<String>(headers)
+
+        val response = restTemplate.exchange(URI.create("http://api.football-data.org/v2/competitions/SA/standings"), HttpMethod.GET, entity, Standings::class.java)
+
+        val body = response.body
+
+        return body
+            ?.standings
+            ?.first { "TOTAL".equals(it.type, ignoreCase = true) }
+            ?.table
+            ?.map { it.team.name to it.goalsPerGame to it.points}
+            ?.sortedByDescending { it.second }
+            ?.joinToString(separator = "\n")
+    }
+
+    @GetMapping("/BundesLiga")
+    private fun getBundesLiga(): String? {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.set("X-Auth-Token", "361f59a65b3443c19918534628accf76")
+
+        val entity = HttpEntity<String>(headers)
+
+        val response = restTemplate.exchange(URI.create("http://api.football-data.org/v2/competitions/BL1/standings"), HttpMethod.GET, entity, Standings::class.java)
+
+        val body = response.body
+
+        return body
+            ?.standings
+            ?.first { "TOTAL".equals(it.type, ignoreCase = true) }
+            ?.table
+            ?.map { it.team.name to it.goalsPerGame to it.points}
+            ?.sortedByDescending { it.second }
+            ?.joinToString(separator = "\n")
     }
 }
 

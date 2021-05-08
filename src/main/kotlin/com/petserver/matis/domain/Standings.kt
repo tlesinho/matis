@@ -1,5 +1,7 @@
 package com.petserver.matis.domain
 
+import kotlin.time.toDuration
+
 data class Standings(
         val competition: Competition,
         val filters: Map<String, String>,
@@ -41,7 +43,8 @@ data class Standings(
             val points: Int,
             val position: Int,
             val team: Team,
-            val won: Int
+            val won: Int,
+            val goalsPerGame: Double = goalsFor.toDouble() / playedGames.toDouble()
     )
 
     data class Team(
